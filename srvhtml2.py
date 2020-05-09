@@ -49,16 +49,42 @@ def handleClient(conn,addr):
                     data = head(open(word_vec[1][1:],"r"))
                 except:
                     print ('deuruim')
-                    #data+="ERRO 404: NOT FOUND"
+                    data+="ERRO 404: NOT FOUND"
                     #conn.sendall(data.encode())
             conn.sendall(data.encode())
         if word_vec[0]=='POST':
-            if word_vec[1]=="/":
-                return
+            #Prec = word_vec[1][2:]
+            wFile=open('usr.txt','w')
+            if word_vec[1]!='/':
+                try:
+                    wFile = open(word_vec[1][1:],'r')
+                    wFile = open(word_vec[1][1:],'w')
+                except:
+                    data+="HTTP/1.0 404 NOT FOUND\r\n"
+
+
+            n=word.find('\r\n\r\n')+4
+            print(word[n:])
+            prec = word[n:]
+            prec = prec.split('&')
+            print(prec)
+            for x in prec:
+                #x.split('=')
+                print(x)
+                wFile.write(f"{x}\r\n")
+            conn.sendall(data.encode())
+
+        
+
+                    
 
 
 
-        print(f'{addr}:{word}')
+                
+
+
+
+       # print(f'{addr}:{word}')
 
 
 server_address = ('',6789)
