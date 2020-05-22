@@ -1,0 +1,41 @@
+*{
+    margin: 0;
+    padding: 0;
+    background: #000000;
+    color: #ffffff;
+}
+
+
+.mainContainer{
+    display: flex;
+    justify-content: center;
+    margin-top: 10%;
+    flex-wrap: wrap;
+}
+
+.card{
+    margin-left: 10px;
+}
+
+.card h2{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+.card a img{
+width: 350px;
+height: 300px;
+border: 2px solid black;
+border-radius: 5%;
+}
+
+
+.card a img:hover{
+
+    width: 380px;
+    height: 320px;
+    border: 2px solid black;
+    border-radius: 5%;
+}
+

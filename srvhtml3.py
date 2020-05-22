@@ -14,7 +14,7 @@ def head(path,Type):
     now = datetime.now()
     stamp = mktime(now.timetuple())
     _data = "HTTP/1.0 200 OK\r\n"
-  #  _data += "Connection: keep-alive\r\n"
+    _data += "Connection: keep-alive\r\n"
     _data += "Allow: GET, HEAD\r\n"
     _data += "Content-Lenght: "+str(len(open(path,"rb").read()))+"\r\n"
     _data += "Content-Type: "+Type+"\r\n"
@@ -39,28 +39,33 @@ def handleClient(conn,addr):
                 data += head("index.html","text/html; charset=utf-8")
                 print("aqui")
                 data += open("index.html","r").read()
-                conn.sendall(data.encode())
+                data = data.encode()
             else:
                 try:
-                    if ".css" in word_vec[1][1:]:
+                    if "css" in word_vec[1][1:]:
                         data += head(word_vec[1][1:],"text/css; charset=utf-8")
                         print("aqui2")
-                        data += open(word_vec[1][1:],"r").read()
-                        conn.sendall(data.encode())
-                    if ".jpg" in word_vec[1][1:]:
-                        data += head(word_vec[1][1:],"image/jpeg; charset=utf-8")
-                        print("aqui2")
                         data = data.encode()
+                        data += open(word_vec[1][1:],"r").read().encode()
+                        print("Aqui3")
+                        print("Aqui4")
+                    if "jpg" in word_vec[1][1:]:
+                        data += head(word_vec[1][1:],"image/jpeg")
+                        data = data.encode()
+                        print("aqui2")
                         data += open(word_vec[1][1:],"rb").read()
-                        conn.sendall(data)
+                        print("aqui3")
                     else:
                         data += head(word_vec[1][1:],"text/html; charset=utf-8")
                         data += open(word_vec[1][1:],"r").read()
-                        conn.sendall(data.encode())
+                        data = data.encode()
                 except:
                     print ('deuruim')
+                    data =""
                     data+="HTTP/1.0 404 NOT FOUND\r\n"
-                    conn.sendall(data.encode())
+                    data = data.encode()
+                    #conn.sendall(data.encode())
+            conn.sendall(data)
         if word_vec[0]=='HEAD':
             if word_vec[1]=='/':
                 data = head("index.html","text/html; charset=utf-8")
@@ -77,41 +82,37 @@ def handleClient(conn,addr):
             conn.sendall(data.encode())
         if word_vec[0]=='POST':
             #Prec = word_vec[1][2:]
-            arquivo_valido=True
             wFile=open('usr.txt','w')
             if word_vec[1]!='/':
                 try:
                     wFile = open(word_vec[1][1:],'r')
                     wFile = open(word_vec[1][1:],'w')
-                    data+="HTTP/1.0 204 OK\r\n"
+                    data+="HTTP/1.0 200 OK\r\n"
                     data += "Connection: Close\r\n\r\n"
-                    #data+="DEUBOM\r\n"
+                    data+="DEUBOM\r\n"
                 except:
                     data+="HTTP/1.0 404 NOT FOUND\r\n"
                     data += "Connection: Close\r\n"
-                    arquivo_valido=False
             else:
-                data+="HTTP/1.0 204 OK\r\n"
+                data+="HTTP/1.0 200 OK\r\n"
                 data += "Connection: Close\r\n\r\n"
-                #data+="DEUBOM\r\n"
+                data+="DEUBOM\r\n"
 
-            if arquivo_valido:
-                n=word.find('\r\n\r\n')+4
-                print("\r\n Post recebido:")
-                print(word[n:])
-                print("Post separado:")
-                prec = word[n:]
-                prec = prec.split('&')
-                print(prec)
-                i=1
-                for x in prec:
-                    print(f"Chave/valor {i}:")
-                    #x.split('=')
-                    print(x)
-                    wFile.write(f"{x}\r\n")
-                    i+=1
-            else:
-                print("Arquivo invalido")
+
+            n=word.find('\r\n\r\n')+4
+            print("\r\n Post recebido:")
+            print(word[n:])
+            print("Post separado:")
+            prec = word[n:]
+            prec = prec.split('&')
+            print(prec)
+            i=1
+            for x in prec:
+                print(f"Chave/valor {i}:")
+                #x.split('=')
+                print(x)
+                wFile.write(f"{x}\r\n")
+                i+=1
             conn.sendall(data.encode())
             
 
