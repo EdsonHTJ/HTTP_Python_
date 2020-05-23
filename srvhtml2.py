@@ -14,7 +14,6 @@ def head(path,Type):
     now = datetime.now()
     stamp = mktime(now.timetuple())
     _data = "HTTP/1.0 200 OK\r\n"
-  #  _data += "Connection: keep-alive\r\n"
     _data += "Allow: GET, HEAD\r\n"
     _data += "Content-Lenght: "+str(len(open(path,"rb").read()))+"\r\n"
     _data += "Content-Type: "+Type+"\r\n"
@@ -66,14 +65,15 @@ def handleClient(conn,addr):
                 data = head("index.html","text/html; charset=utf-8")
             else:
                 try:
-                    if "css" in word_vec[1][1:]:
+                    if ".css" in word_vec[1][1:]:
                         data += head(word_vec[1][1:],"text/css; charset=utf-8")
+                    if ".jpg" in word_vec[1][1:]:
+                        data += head(word_vec[1][1:],"image/jpeg; charset=utf-8")
                     else:
                         data += head(word_vec[1][1:],"text/html; charset=utf-8")
                 except:
                     print ('deuruim')
-                    data+="ERRO 404: NOT FOUND"
-                    #conn.sendall(data.encode())
+                    data+="HTTP/1.0 404 NOT FOUND\r\n"
             conn.sendall(data.encode())
         if word_vec[0]=='POST':
             #Prec = word_vec[1][2:]
@@ -83,16 +83,13 @@ def handleClient(conn,addr):
                 try:
                     wFile = open(word_vec[1][1:],'r')
                     wFile = open(word_vec[1][1:],'w')
-                    data+="HTTP/1.0 204 OK\r\n"
-                    data += "Connection: Close\r\n\r\n"
+                    data+="HTTP/1.0 204 NO CONTENT\r\n"
                     #data+="DEUBOM\r\n"
                 except:
                     data+="HTTP/1.0 404 NOT FOUND\r\n"
-                    data += "Connection: Close\r\n"
                     arquivo_valido=False
             else:
-                data+="HTTP/1.0 204 OK\r\n"
-                data += "Connection: Close\r\n\r\n"
+                data+="HTTP/1.0 204 NO CONTENT\r\n"
                 #data+="DEUBOM\r\n"
 
             if arquivo_valido:
