@@ -45,16 +45,19 @@ def handleClient(conn,addr):
                         data += head(word_vec[1][1:],"text/css; charset=utf-8")
                         print("aqui2")
                         data += open(word_vec[1][1:],"r").read()
+                        data += "\r\n\r\n"
                         conn.sendall(data.encode())
                     if ".jpg" in word_vec[1][1:]:
                         data += head(word_vec[1][1:],"image/jpeg; charset=utf-8")
                         print("aqui2")
                         data = data.encode()
                         data += open(word_vec[1][1:],"rb").read()
+                        data += "\r\n\r\n".encode()
                         conn.sendall(data)
                     else:
                         data += head(word_vec[1][1:],"text/html; charset=utf-8")
                         data += open(word_vec[1][1:],"r").read()
+                        data += "\r\n\r\n"
                         conn.sendall(data.encode())
                 except:
                     print ('deuruim')
@@ -110,6 +113,9 @@ def handleClient(conn,addr):
             else:
                 print("Arquivo invalido")
             conn.sendall(data.encode())
+    print("Fim da thread\r\n")
+    #conn.shutdown()
+    conn.close()
             
 
         
@@ -125,7 +131,7 @@ def handleClient(conn,addr):
        # print(f'{addr}:{word}')
 
 
-server_address = ('',6789)
+server_address = ('',6780)
 
 serverSocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 serverSocket.bind(server_address)
