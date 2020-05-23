@@ -25,7 +25,7 @@ def head(path,Type):
 
 
 def handleClient(conn,addr):
-    buffer_size=100
+    buffer_size=1024
     print(f'Criando a Thread com o cliente {addr}')
     data=""
     rcv = conn.recv(buffer_size)
